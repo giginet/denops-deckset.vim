@@ -46,5 +46,5 @@ export async function main(denops: Denops): Promise<void> {
     await denops.call('append', line, texts)
   }
 
-  await denops.cmd(`command! IH call denops#request('${denops.name}', 'insertCodeHighlight', [])`);
+  await denops.cmd(`command! InsertCodeHighlight call denops#request('${denops.name}', 'insertCodeHighlight', [])`);
 };
