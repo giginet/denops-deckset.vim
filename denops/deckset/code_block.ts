@@ -40,9 +40,9 @@ export function traverseAllCodeBlocks(lines: string[]): CodeBlock[] {
   return codeBlocks;
 }
 
-export async function getCurrentCodeBlock(line: Line, codeBlocks: CodeBlock[]): Promise<CodeBlock | null> {
+export function getCurrentCodeBlock(line: Line, codeBlocks: CodeBlock[]): CodeBlock | null {
   for (const codeBlock of codeBlocks) {
-    if (codeBlock.start >= line && line <= codeBlock.end) {
+    if (line >= codeBlock.start && line <= codeBlock.end) {
       return codeBlock;
     }
   }
@@ -61,6 +61,12 @@ export function buildTag(pos: HighlightedPosition): string {
     }
 }
 
-function convertGlobalToCodeBlockLine(line: number, codeBlock: CodeBlock): number {
-  return line - codeBlock.start;
+export function buildInsertingInfo(codeBlock: CodeBlock, globalLine: Line): [string, Line] | null {
+    if (codeBlock.start == globalLine || codeBlock.end == globalLine) {
+        return null;
+    }
+    const lineToInsert = codeBlock.start - 1;
+    const blockLine = globalLine - codeBlock.start;
+    const tag = buildTag(blockLine);
+    return [tag, lineToInsert];
 }

@@ -6,8 +6,7 @@ import {
   getCurrentCodeBlock
 } from "../denops/deckset/code_block.ts"
 
-Deno.test("can traverse code blocks", () => {
-  const text = `
+const text = `
 Hello
 
 \`\`\`javascript
@@ -22,8 +21,9 @@ print("hello")
 hello!
 how are you?
 \`\`\`
-  `.trim()
+`.trim()
 
+Deno.test("can traverse code blocks", () => {
   const lines = text.split("\n");
   const codeBlocks = traverseAllCodeBlocks(lines);
   assertEquals(codeBlocks.length, 3);
@@ -43,7 +43,27 @@ how are you?
   assertEquals(unknownBlock.end, 14);
   assertEquals(unknownBlock.contents, ["hello!", "how are you?"]);
   assertEquals(unknownBlock.language, undefined);
+});
 
+Deno.test("can get a current code block", () => {
+  const lines = text.split("\n");
+  const codeBlocks = traverseAllCodeBlocks(lines);
+
+  const block1 = getCurrentCodeBlock(1, codeBlocks);
+  assertEquals(block1, null);
+  
+  const block3 = getCurrentCodeBlock(3, codeBlocks);
+  assertEquals(block3?.start, 3);
+  
+  const block4 = getCurrentCodeBlock(4, codeBlocks);
+  assertEquals(block4?.start, 3);
+
+  const block5 = getCurrentCodeBlock(5, codeBlocks);
+  assertEquals(block5?.start, 3);
+
+  const block7 = getCurrentCodeBlock(7, codeBlocks);
+  assertEquals(block7?.start, 7);
+  assertEquals(block7?.language, "swift");
 });
 
 Deno.test("can build tags", () => {
