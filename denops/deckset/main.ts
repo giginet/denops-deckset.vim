@@ -15,22 +15,23 @@ export async function main(denops: Denops): Promise<void> {
       }
     }
   };
+
+  async function getWholeText(denops: Denops): Promise<string[]> {
+    const lines = await denops.call("getline", 1, "$");
+    return lines;
+  }
+
+  async function getCurrentLine(denops: Denops): Promise<number> {
+    const line = await denops.call("line", ".");
+    return line;
+  }
+
+  async function insertTag(block: CodeBlock, pos: HighlightedPosition): Promise<void> {
+    const tag = buildTag(pos);
+    let startLine = block.start;
+    let beforeLine = startLine - 1;
+    // await insert();
+  }
+
   await denops.cmd(`command! IH call denops#request('${denops.name}', 'insertCodeHighlight', [])`);
 };
-
-async function getWholeText(denops: Denops): Promise<string[]> {
-  const lines = await denops.call("getline", 1, "$");
-  return lines;
-}
-
-async function getCurrentLine(denops: Denops): Promise<number> {
-  const line = await denops.call("line", ".");
-  return line;
-}
-
-async function insertTag(block: CodeBlock, pos: HighlightedPosition): Promise<void> {
-  const tag = buildTag(pos);
-  let startLine = block.start;
-  let beforeLine = startLine - 1;
-  // await insert();
-}

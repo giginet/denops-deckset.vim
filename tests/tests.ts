@@ -1,11 +1,12 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import {
   CodeBlock,
+  buildTag,
   traverseAllCodeBlocks,
   getCurrentCodeBlock
 } from "../denops/deckset/code_block.ts"
 
-Deno.test("can traverse code blocks", async () => {
+Deno.test("can traverse code blocks", () => {
   const text = `
 Hello
 
@@ -24,7 +25,7 @@ how are you?
   `.trim()
 
   const lines = text.split("\n");
-  const codeBlocks = await traverseAllCodeBlocks(lines);
+  const codeBlocks = traverseAllCodeBlocks(lines);
   assertEquals(codeBlocks.length, 3);
 
   const [javascriptBlock, swiftBlock, unknownBlock] = codeBlocks;
@@ -43,4 +44,10 @@ how are you?
   assertEquals(unknownBlock.contents, ["hello!", "how are you?"]);
   assertEquals(unknownBlock.language, undefined);
 
+});
+
+Deno.test("can build tags", () => {
+  assertEquals(buildTag(42), "[.code-highlight: 42]");
+  assertEquals(buildTag({start: 42, end: 45}), "[.code-highlight: 42-45]");
+  assertEquals(buildTag([2, 5, 9]), "[.code-highlight: 2,5,9]");
 });

@@ -7,17 +7,17 @@ export interface CodeBlock {
   contents: string[];
 }
 
-interface Range {
-  start: Line,
-  end: Line,
+export interface Range {
+    start: Line,
+    end: Line,
 }
 
 type HighlightedPosition = Line | Range | Array<Line>
 
 export function traverseAllCodeBlocks(lines: string[]): CodeBlock[] {
   let codeBlocks: CodeBlock[] = [];
-  const startPattern = /```(.+)?/;
-  const endPattern = /```/;
+  const startPattern = /^```(.+)?$/;
+  const endPattern = /^```$/;
 
   let currentCodeBlock: CodeBlock | null = null;
   lines.forEach((text, index) => { 
@@ -49,8 +49,16 @@ export async function getCurrentCodeBlock(line: Line, codeBlocks: CodeBlock[]): 
   return null;
 }
 
-function buildTag(pos: HighlightedPosition): string {
-  return `[.code-highlight: 1]`;
+export function buildTag(pos: HighlightedPosition): string {
+    if (typeof pos === 'number') {
+        return `[.code-highlight: ${pos}]`;
+    } else if ('start' in pos && 'end' in pos) {
+        return `[.code-highlight: ${pos.start}-${pos.end}]`;
+    } else if (pos instanceof Array) {
+        return `[.code-highlight: ${pos.join(',')}]`;
+    } else {
+        throw "unknown";
+    }
 }
 
 function convertGlobalToCodeBlockLine(line: number, codeBlock: CodeBlock): number {
