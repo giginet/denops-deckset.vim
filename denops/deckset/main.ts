@@ -7,7 +7,12 @@ export async function main(denops: Denops): Promise<void> {
     async insertCodeHighlight(pos: number): Promise<void> {
       const text = await getWholeText(denops);
       const blocks = traverseAllCodeBlocks(text);
-      console.log(blocks[0].contents);
+      const currentLine = await getCurrentLine(denops);
+      const currentBlock = getCurrentCodeBlock(currentLine, blocks);
+      if (currentBlock != null) {
+        console.log(currentBlock.language);
+        await insertTag(currentBlock, 0);
+      }
     }
   };
   await denops.cmd(`command! IH call denops#request('${denops.name}', 'insertCodeHighlight', [])`);
@@ -66,7 +71,17 @@ async function getWholeText(denops: Denops): Promise<string[]> {
   return lines;
 }
 
-async function getCurrentCodeBlock(): Promise<FencedCodeBlock> {
+async function getCurrentLine(denops: Denops): Promise<number> {
+  const line = await denops.call("line", ".");
+  return line;
+}
+
+function getCurrentCodeBlock(line: Line, codeBlocks: FencedCodeBlock[]): Promise<FencedCodeBlock> {
+  for (const codeBlock of codeBlocks) {
+    if (codeBlock.start >= line && line <= codeBlock.end) {
+      return codeBlock;
+    }
+  }
   return null;
 }
 
