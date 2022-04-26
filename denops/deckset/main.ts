@@ -7,6 +7,10 @@ import {
 import {
   wrapURL,
 } from './link.ts'
+import {
+  defaultConfiguration,
+  buildConfigurationTag,
+} from './configuration.ts'
 
 export async function main(denops: Denops): Promise<void> {
   console.log("Hello Denops!");
@@ -22,10 +26,10 @@ export async function main(denops: Denops): Promise<void> {
           let [tag, line] = result;
           await insertTexts([tag], line);
         } else {
-          sayError();
+          sayCodeBlockError();
         }
       } else {
-          sayError();
+          sayCodeBlockError();
       }
     },
     async linkURLs(): Promise<void> {
@@ -36,13 +40,23 @@ export async function main(denops: Denops): Promise<void> {
       } else {
         console.error("There are no links.");
       }
+    },
+    async insertConfiguration(): Promise<void> {
+      const configuration = defaultConfiguration;
+      const metadata = buildConfigurationTag(configuration);
+      await insertToTop(metadata);
     }
   };
 
   await denops.cmd(`command! InsertLink call denops#request('${denops.name}', 'linkURLs', [])`);
+  await denops.cmd(`command! InsertConfiguration call denops#request('${denops.name}', 'insertConfiguration', [])`);
 
-  function sayError() {
+  function sayCodeBlockError() {
     console.error("Cursors must be in a code block.");
+  }
+
+  async function insertToTop(texts: string[]): Promise<void> {
+    await denops.call("append", 0, texts)
   }
 
   async function getWholeText(): Promise<string[]> {
