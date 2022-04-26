@@ -4,6 +4,9 @@ import {
   getCurrentCodeBlock,
   buildInsertingInfo,
 } from './code_block.ts'
+import {
+  wrapURL,
+} from './link.ts'
 
 export async function main(denops: Denops): Promise<void> {
   console.log("Hello Denops!");
@@ -24,8 +27,19 @@ export async function main(denops: Denops): Promise<void> {
       } else {
           sayError();
       }
+    },
+    async linkURLs(): Promise<void> {
+      const currentLine = await getCurrentLineText();
+      const wrapped = wrapURL(currentLine);
+      if (currentLine != wrapped) {
+        await replaceCurrentLine(wrapped);
+      } else {
+        console.error("There are no links.");
+      }
     }
   };
+
+  await denops.cmd(`command! InsertLink call denops#request('${denops.name}', 'linkURLs', [])`);
 
   function sayError() {
     console.error("Cursors must be in a code block.");
@@ -34,6 +48,15 @@ export async function main(denops: Denops): Promise<void> {
   async function getWholeText(): Promise<string[]> {
     const lines = await denops.call("getline", 1, "$");
     return lines;
+  }
+
+  async function replaceCurrentLine(text: string): Promise<void> {
+    await denops.call('setline', '.', text);
+  }
+
+  async function getCurrentLineText(): Promise<string> {
+    const line = await denops.call("getline", ".");
+    return line;
   }
 
   async function insertTexts(texts: string[], line: Line): Promise<void> {
