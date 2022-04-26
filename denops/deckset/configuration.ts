@@ -36,7 +36,7 @@ export function buildConfigurationTag(configuration: Configuration): string[] {
     ]
 
     if (configuration.footer != null) {
-        metadata.push(`.footer: ${configuration.footer}`);
+        metadata.push(`footer: ${configuration.footer}`);
     }
 
     if (configuration.theme != null) {

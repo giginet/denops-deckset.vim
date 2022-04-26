@@ -8,6 +8,7 @@ import {
   wrapURL,
 } from './link.ts'
 import {
+  Configuration,
   defaultConfiguration,
   buildConfigurationTag,
 } from './configuration.ts'
@@ -42,7 +43,7 @@ export async function main(denops: Denops): Promise<void> {
       }
     },
     async insertConfiguration(): Promise<void> {
-      const configuration = defaultConfiguration;
+      const configuration = await buildConfiguration();
       const metadata = buildConfigurationTag(configuration);
       await insertToTop(metadata);
     }
@@ -75,5 +76,31 @@ export async function main(denops: Denops): Promise<void> {
 
   async function insertTexts(texts: string[], line: Line): Promise<void> {
     await denops.call('append', line, texts);
+  }
+
+  async function loadVariable(variableName: string): Promise<unknown> {
+    return await denops.eval(variableName);
+  }
+
+  async function buildConfiguration(): Promise<Configuration> {
+    const slideNumbers = await loadVariable("g:deckset#show_slide_numbers");
+    const slideCount = await loadVariable("g:deckset#show_slide_count");
+    const slideDividers = await loadVariable("g:deckset#slide_dividers");
+    const autoScale = await loadVariable("g:deckset#autoscale");
+    const slideTransition = await loadVariable("g:deckset#slide_transition");
+    const footer = await loadVariable("g:deckset#footer");
+    const theme = await loadVariable("g:deckset#theme");
+    console.log(slideNumbers);
+    let defaultConfig = defaultConfiguration;
+    const configuration = {
+      slideNumbers: slideNumbers || defaultConfig.slideNumbers,
+      slideCount: slideCount || defaultConfig.slideCount,
+      slideDividers: slideDividers || defaultConfig.slideDividers,
+      autoScale: autoScale || defaultConfig.autoScale,
+      slideTransition: slideTransition || defaultConfig.slideTransition,
+      footer: footer || defaultConfig.footer,
+      theme: theme || defaultConfig.theme,
+    }
+    return configuration;
   }
 }
