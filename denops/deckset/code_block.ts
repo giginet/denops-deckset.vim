@@ -61,12 +61,19 @@ export function buildTag(pos: HighlightedPosition): string {
     }
 }
 
-export function buildInsertingInfo(codeBlock: CodeBlock, globalLine: Line): [string, Line] | null {
-    if (codeBlock.start == globalLine || codeBlock.end == globalLine) {
-        return null;
-    }
+export function buildInsertingInfo(codeBlock: CodeBlock, firstLine: Line, lastLine: Line): [string, Line] | null {
     const lineToInsert = codeBlock.start - 1;
-    const blockLine = globalLine - codeBlock.start;
-    const tag = buildTag(blockLine);
-    return [tag, lineToInsert];
+    if (firstLine == lastLine) { // Single Line
+      if (firstLine <= codeBlock.start || lastLine >= codeBlock.end) {
+        return null;
+      }
+      const blockLine = firstLine - codeBlock.start;
+      const tag = buildTag(blockLine);
+      return [tag, lineToInsert];
+    } else { // Range
+      const startLine = firstLine > codeBlock.start ? firstLine : codeBlock.start;
+      const endLine = lastLine >= codeBlock.end ? codeBlock.end - 1 : lastLine;
+      const tag = buildTag({start: startLine - codeBlock.start, end: endLine - codeBlock.start});
+      return [tag, lineToInsert];
+    }
 }

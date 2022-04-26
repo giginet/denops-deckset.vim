@@ -3,7 +3,8 @@ import {
   CodeBlock,
   buildTag,
   traverseAllCodeBlocks,
-  getCurrentCodeBlock
+  getCurrentCodeBlock,
+  buildInsertingInfo,
 } from "../denops/deckset/code_block.ts"
 
 const text = `
@@ -70,4 +71,17 @@ Deno.test("can build tags", () => {
   assertEquals(buildTag(42), "[.code-highlight: 42]");
   assertEquals(buildTag({start: 42, end: 45}), "[.code-highlight: 42-45]");
   assertEquals(buildTag([2, 5, 9]), "[.code-highlight: 2,5,9]");
+});
+
+Deno.test("can build inserting info", () => {
+  const lines = text.split("\n");
+  const codeBlocks = traverseAllCodeBlocks(lines);
+  const codeBlock = codeBlocks[2];
+
+  const result = buildInsertingInfo(codeBlock, 12, 13);
+  if (result != null) {
+    const [tag, line] = result;
+    assertEquals(tag, "[.code-highlight: 1-2]");
+    assertEquals(line, 10);
+  }
 });
