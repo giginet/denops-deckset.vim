@@ -14,8 +14,6 @@ import {
 } from './configuration.ts'
 
 export async function main(denops: Denops): Promise<void> {
-  console.log("Hello Denops!");
-
   denops.dispatcher = {
     async insertCodeHighlight(firstLine: Line, lastLine: Line): Promise<void> {
       const text = await getWholeText();
@@ -78,25 +76,20 @@ export async function main(denops: Denops): Promise<void> {
     await denops.call('append', line, texts);
   }
 
-  async function loadVariable(variableName: string): Promise<unknown> {
-    return await denops.eval(variableName);
-  }
-
   async function buildConfiguration(): Promise<Configuration> {
-    const slideNumbers = await loadVariable("g:deckset#show_slide_numbers");
-    const slideCount = await loadVariable("g:deckset#show_slide_count");
-    const slideDividers = await loadVariable("g:deckset#slide_dividers");
-    const autoScale = await loadVariable("g:deckset#autoscale");
-    const slideTransition = await loadVariable("g:deckset#slide_transition");
-    const footer = await loadVariable("g:deckset#footer");
-    const theme = await loadVariable("g:deckset#theme");
-    console.log(slideNumbers);
+    const slideNumbers = await denops.eval("g:deckset#show_slide_numbers") as boolean;
+    const slideCount = await denops.eval("g:deckset#show_slide_count") as boolean;
+    const slideDividers = await denops.eval("g:deckset#slide_dividers");
+    const autoScale = await denops.eval("g:deckset#autoscale") as boolean;
+    const slideTransition = await denops.eval("g:deckset#slide_transition") as number;
+    const footer = await denops.eval("g:deckset#footer");
+    const theme = await denops.eval("g:deckset#theme");
     let defaultConfig = defaultConfiguration;
     const configuration = {
-      slideNumbers: slideNumbers || defaultConfig.slideNumbers,
-      slideCount: slideCount || defaultConfig.slideCount,
+      slideNumbers: !!slideNumbers || defaultConfig.slideNumbers,
+      slideCount: !!slideCount || defaultConfig.slideCount,
       slideDividers: slideDividers || defaultConfig.slideDividers,
-      autoScale: autoScale || defaultConfig.autoScale,
+      autoScale: !!autoScale || defaultConfig.autoScale,
       slideTransition: slideTransition || defaultConfig.slideTransition,
       footer: footer || defaultConfig.footer,
       theme: theme || defaultConfig.theme,
