@@ -6,6 +6,8 @@ Vim/Neovim plugin which enpowers editing [Deckset](https://www.deckset.com/) sli
 
 ### Insert code highlight annotations
 
+![](images/code-highlight.gif)
+
 Deckset supports [Code highligiting feature](https://docs.decksetapp.com/English.lproj/Formatting/06-code-blocks.html) for Fenced Code Blocks. 
 However, writing annotations by hand is very tough.
 
@@ -15,6 +17,8 @@ Execute `:InsertCodeHighlight` then it inserts annotations for selecting lines.
 
 ### Insert slide configurations
 
+![](images/configuration.gif)
+
 Deckset supports [Configuration commands](https://docs.decksetapp.com/English.lproj/Customization/01-configuration-commands.html).
 This plugin helps to insert them easily.
 
@@ -23,6 +27,8 @@ Execute `:InsertConfiguration` then it inserts slide configurations.
 You can set your favorite slide configurations before. See [Configuration](#configuration) for details.
 
 ### Convert URLs to links
+
+![](images/link.gif)
 
 You can wrap URL texts with links.
 
