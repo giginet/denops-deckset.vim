@@ -27,7 +27,7 @@ function extractSlideTransition(transition: boolean | number): string {
 }
 
 export function buildConfigurationTag(configuration: Configuration): string[] {
-    let metadata = [
+    const metadata = [
         `slidenumbers: ${configuration.slideNumbers}`,
         `slidecount: ${configuration.slideCount}`,
         `slide-dividers: ${configuration.slideDividers}`,

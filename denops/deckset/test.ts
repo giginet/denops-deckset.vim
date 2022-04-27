@@ -1,11 +1,10 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import {
-  CodeBlock,
   buildTag,
   traverseAllCodeBlocks,
   getCurrentCodeBlock,
   buildInsertingInfo,
-} from "../denops/deckset/code_block.ts"
+} from "./code_block.ts"
 
 const text = `
 Hello

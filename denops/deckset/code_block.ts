@@ -15,17 +15,17 @@ export interface Range {
 type HighlightedPosition = Line | Range | Array<Line>
 
 export function traverseAllCodeBlocks(lines: string[]): CodeBlock[] {
-  let codeBlocks: CodeBlock[] = [];
+  const codeBlocks: CodeBlock[] = [];
   const startPattern = /^```(.+)?$/;
   const endPattern = /^```$/;
 
   let currentCodeBlock: CodeBlock | null = null;
   lines.forEach((text, index) => { 
-    let startMatch = text.match(startPattern);
+    const startMatch = text.match(startPattern);
     if (currentCodeBlock == null && startMatch) {
       currentCodeBlock = {start: index + 1, end: -1, language: startMatch[1], contents: []};
     } else if (currentCodeBlock != null && text.match(endPattern)) {
-      let codeBlock: CodeBlock = {
+      const codeBlock: CodeBlock = {
         start: currentCodeBlock.start,
         end: index + 1,
         language: currentCodeBlock.language,

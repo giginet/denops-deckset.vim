@@ -22,7 +22,7 @@ export async function main(denops: Denops): Promise<void> {
       if (currentBlock != null) {
         const result = buildInsertingInfo(currentBlock, firstLine, lastLine);
         if (result != null) {
-          let [tag, line] = result;
+          const [tag, line] = result;
           await insertTexts([tag], line);
         } else {
           sayCodeBlockError();
@@ -84,7 +84,7 @@ export async function main(denops: Denops): Promise<void> {
     const slideTransition = await denops.eval("g:deckset#slide_transition") as number;
     const footer = await denops.eval("g:deckset#footer");
     const theme = await denops.eval("g:deckset#theme");
-    let defaultConfig = defaultConfiguration;
+    const defaultConfig = defaultConfiguration;
     const configuration = {
       slideNumbers: !!slideNumbers || defaultConfig.slideNumbers,
       slideCount: !!slideCount || defaultConfig.slideCount,
