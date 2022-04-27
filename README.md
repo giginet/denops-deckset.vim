@@ -1,5 +1,7 @@
 # denops-deckset.vim
 
+[![test](https://github.com/giginet/denops-deckset.vim/actions/workflows/test.yml/badge.svg)](https://github.com/giginet/denops-deckset.vim/actions/workflows/test.yml)
+
 Vim/Neovim plugin which enpowers editing [Deckset](https://www.deckset.com/) slides.
 
 ## Features
