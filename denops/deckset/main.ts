@@ -1,4 +1,4 @@
-import { Denops } from "https://deno.land/x/denops_std@v1.0.0/mod.ts";
+import type { Denops } from "@denops/std";
 import {
   traverseAllCodeBlocks,
   getCurrentCodeBlock,
